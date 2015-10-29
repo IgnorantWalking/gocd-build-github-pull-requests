@@ -14,8 +14,11 @@ import com.tw.go.plugin.model.ModifiedFile;
 import com.tw.go.plugin.model.Revision;
 import com.tw.go.plugin.util.ListUtil;
 import com.tw.go.plugin.util.StringUtil;
+
 import in.ashwanthkumar.gocd.github.provider.Provider;
+import in.ashwanthkumar.gocd.github.util.BranchFilter;
 import in.ashwanthkumar.gocd.github.util.JSONUtils;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -106,6 +109,8 @@ public class GitHubPRBuildPlugin implements GoPlugin {
         response.put("url", createField("URL", null, true, true, false, "0"));
         response.put("username", createField("Username", null, false, false, false, "1"));
         response.put("password", createField("Password", null, false, false, true, "2"));
+        response.put("selectedBranches", createField("Selected branches", "", true, false, false, "3"));
+        response.put("blacklistedBranches", createField("Blacklisted branches", "", true, false, false, "4"));
         return renderJSON(SUCCESS_RESPONSE_CODE, response);
     }
 
@@ -200,9 +205,15 @@ public class GitHubPRBuildPlugin implements GoPlugin {
             }
 
             Map<String, String> newerRevisions = new HashMap<String, String>();
+            BranchFilter branchFilter = new BranchFilter(configuration.get("selectedBranches"), configuration.get("blacklistedBranches"));
             for (String branch : newBranchToRevisionMap.keySet()) {
+                if (branchFilter.isValidBranch(branch)) {
                 if (branchHasNewChange(oldBranchToRevisionMap.get(branch), newBranchToRevisionMap.get(branch))) {
                     newerRevisions.put(branch, newBranchToRevisionMap.get(branch));
+	                    LOGGER.debug(String.format("Branch: %s was accepted", branch));
+	                }
+                } else {
+                    LOGGER.debug(String.format("Branch %s was discarded", branch));
                 }
             }
 

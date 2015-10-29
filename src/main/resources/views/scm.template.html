@@ -13,3 +13,15 @@
     <input type="password" ng-model="password" ng-required="false"/>
     <span class="form_error" ng-show="GOINPUTNAME[password].$error.server">{{ GOINPUTNAME[password].$error.server }}</span>
 </div>
+<div class="form_item_block">
+    <label>Selected branches:</label>
+    <p>Enter the branches to process (<a href="https://en.wikipedia.org/wiki/Glob_(programming)" target="_blank">glob patterns</a> are supported). All branches as default.<br/>Separate multiple entries with a comma.</p>
+    <input type="text" ng-model="selectedBranches" ng-required="false"/>
+    <span class="form_error" ng-show="GOINPUTNAME[selectedBranches].$error.server">{{ GOINPUTNAME[selected-branches].$error.server }}</span>
+</div>
+<div class="form_item_block">
+    <label>Blacklisted branches:</label>
+    <p>Enter the branches to discard (<a href="https://en.wikipedia.org/wiki/Glob_(programming)" target="_blank">glob patterns</a> are supported). None as default.<br/>Separate multiple entries with a comma.</p>
+    <input type="text" ng-model="blacklistedBranches" ng-required="false"/>
+    <span class="form_error" ng-show="GOINPUTNAME[blacklistedBranches].$error.server">{{ GOINPUTNAME[blacklisted-branches].$error.server }}</span>
+</div>
